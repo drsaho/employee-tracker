@@ -1,0 +1,14 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "a command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and PostgreSQL.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "sql": "^0.78.0"
+  }
+}
