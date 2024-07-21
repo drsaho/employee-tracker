@@ -91,14 +91,24 @@ function addDepartment() {
         type: 'input',
         message: 'Enter the name of the department:'
     }).then(answer => {
-        const query = 'INSERT INTO department (name) VALUES ($1)';
-        client.query(query, [answer.name], (err, res) => {
+        const checkQuery = 'SELECT * FROM department WHERE name = $1';
+        client.query(checkQuery, [answer.name], (err, res) => {
             if (err) throw err;
-            console.log(`Added ${answer.name} to the database.`);
-            startApp();
+            if (res.rows.length > 0) {
+                console.log('Department already exists.');
+                startApp();
+            } else {
+                const insertQuery = 'INSERT INTO department (name) VALUES ($1)';
+                client.query(insertQuery, [answer.name], (err, res) => {
+                    if (err) throw err;
+                    console.log(`Added ${answer.name} to the database.`);
+                    startApp();
+                });
+            }
         });
     });
 }
+
 
 function addRole() {
     client.query('SELECT * FROM department', (err, res) => {
@@ -122,15 +132,25 @@ function addRole() {
                 choices: departments.map(department => ({ name: department.name, value: department.id }))
             }
         ]).then(answers => {
-            const query = 'INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)';
-            client.query(query, [answers.title, answers.salary, answers.department_id], (err, res) => {
+            const checkQuery = 'SELECT * FROM role WHERE title = $1 AND salary = $2 AND department_id = $3';
+            client.query(checkQuery, [answers.title, answers.salary, answers.department_id], (err, res) => {
                 if (err) throw err;
-                console.log(`Added ${answers.title} to the database.`);
-                startApp();
+                if (res.rows.length > 0) {
+                    console.log('Role already exists.');
+                    startApp();
+                } else {
+                    const insertQuery = 'INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)';
+                    client.query(insertQuery, [answers.title, answers.salary, answers.department_id], (err, res) => {
+                        if (err) throw err;
+                        console.log(`Added ${answers.title} to the database.`);
+                        startApp();
+                    });
+                }
             });
         });
     });
 }
+
 
 function addEmployee() {
     client.query('SELECT * FROM role', (err, res) => {
@@ -163,16 +183,27 @@ function addEmployee() {
                     choices: [{ name: 'None', value: null }].concat(employees.map(employee => ({ name: `${employee.first_name} ${employee.last_name}`, value: employee.id })))
                 }
             ]).then(answers => {
-                const query = 'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4)';
-                client.query(query, [answers.first_name, answers.last_name, answers.role_id, answers.manager_id], (err, res) => {
+                // Check for existing employee
+                const checkQuery = 'SELECT * FROM employee WHERE first_name = $1 AND last_name = $2 AND role_id = $3 AND manager_id = $4';
+                client.query(checkQuery, [answers.first_name, answers.last_name, answers.role_id, answers.manager_id], (err, res) => {
                     if (err) throw err;
-                    console.log(`Added ${answers.first_name} ${answers.last_name} to the database.`);
-                    startApp();
+                    if (res.rows.length > 0) {
+                        console.log('Employee already exists.');
+                        startApp();
+                    } else {
+                        const insertQuery = 'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4)';
+                        client.query(insertQuery, [answers.first_name, answers.last_name, answers.role_id, answers.manager_id], (err, res) => {
+                            if (err) throw err;
+                            console.log(`Added ${answers.first_name} ${answers.last_name} to the database.`);
+                            startApp();
+                        });
+                    }
                 });
             });
         });
     });
 }
+
 
 function updateEmployeeRole() {
     client.query('SELECT * FROM employee', (err, res) => {
