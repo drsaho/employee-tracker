@@ -4,11 +4,16 @@
   "description": "a command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and PostgreSQL.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^10.0.3",
+    "mysql2": "^3.10.3",
     "sql": "^0.78.0"
-  }
+  },
+  "keywords": []
 }
